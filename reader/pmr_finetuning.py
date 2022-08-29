@@ -56,7 +56,8 @@ def _load_annotationsP_A(anno_folder, split):
                           "target": ans_label,
                           "img_id": img_id,
                           "anno_id": item_id,
-                          "det_names": item['objects']
+                          "det_names": item['objects'],
+                          "category":item["category"]
                         })
     return entries
 
@@ -197,12 +198,18 @@ class PMRDataReader:
             random_names = self.generate_random_name(det_names)
             # replace with name
             tokens_a, mask_a = self.replace_det_with_name(entry["question"], random_names)
-            q_str = " ".join(tokens_a)
+            #category information
+            ids_c = entry["category"]
+            q_str = ids_c + " [MARK] "+" ".join(tokens_a)
+
             ids_a = []
             for i, q in enumerate(q_str.split(" [MARK] ")):
-                if i == 1:
+                if i >= 1:
                     ids_a.append(self.vocab["[SEP]"])
                 ids_a = ids_a + self.processor.convert_sentence_to_ids_without_cls(q)
+
+
+
 
             input_ids_all = []
             segment_ids_all = []
