@@ -1,3 +1,17 @@
+## Requirements
+  ```script
+   #train A100-40G cuda11.0 cudnn8.0.4 python 3.7
+   #test RTX3090-24G cuda11.1 cudnn8.0.4 python 3.7
+   nltk==3.2.4
+   numpy==1.21.6
+   scipy==1.2.1
+   six==1.16.0
+   json_lines==0.5.0
+   lmdb==0.97
+   opencv-python==3.4.2.17
+   paddlepaddle-gpu==2.3.0rc0
+   protobuf==3.20.0
+  ```
 
 
 
@@ -54,15 +68,15 @@ Premise-based Multi-modal Reasoning(PMR) is a task that the inference model shou
  
   ```script
      python finetune.py
-     --use_cuda True  --use_fast_executor true  --batch_size 8 --do_train False --do_test True --task_name pmr --test_split test --vocab_path ernie-large/vocab.txt --task_group_json ./conf/pmr/test_pmr.json 
-     --init_checkpoint ./PMR/output_pmr_tv/step_13320 --ernie_config_path ernie-large/ernie_vil.large.json   --max_seq_len 80 --skip_steps 10 --result_file ./PMR/result_pmr_test/13320.txt
+     --use_cuda True  --use_fast_executor true  --batch_size 32 --do_train False --do_test True --task_name pmr --test_split test --vocab_path ernie-large/vocab.txt --task_group_json ./conf/pmr/test_pmr.json 
+     --init_checkpoint ./PMR/output_pmr_tv/step_13320 --ernie_config_path ernie-large/ernie_vil.large.json   --max_seq_len 50 --skip_steps 10 --result_file ./PMR/result_pmr_test/13320.txt
   ```
 ### 训练
 使用Bottom-Up-Attention生成图片特征后，使用下面的指令进行PMR任务的训练
  
   ```script
      python finetune.py
-     --use_cuda True --is_distributed False --use_fast_executor true --nccl_comm_num 1 --batch_size 48 --do_train True --do_test False --task_name pmr --vocab_path ernie-large/vocab.txt --task_group_json ./conf/pmr/task_pmr.json --lr_scheduler manual_warmup_decay --decay_steps 13308;19962 --lr_decay_ratio 0.1 
-     --layer_decay_rate 0.0 --text_init_layers 18 --n_layers 30 --margin 0.3 --num_train_steps 26640 --checkpoints ./PMR/output_pmr_ot --save_steps 3330 --init_checkpoint ernie-large/params --ernie_config_path ernie-large/ernie_vil.large.json --learning_rate 2e-5 --warmup_steps 6654 --weight_decay 0.01 --max_seq_len 80
+     --use_cuda True --is_distributed False --use_fast_executor true --nccl_comm_num 1 --batch_size 32 --do_train True --do_test False --task_name pmr --vocab_path ernie-large/vocab.txt --task_group_json ./conf/pmr/task_pmr.json --lr_scheduler manual_warmup_decay --decay_steps 13308;19962 --lr_decay_ratio 0.1 
+     --layer_decay_rate 0.0 --text_init_layers 18 --n_layers 30 --margin 0.3 --num_train_steps 26640 --checkpoints ./PMR/output_pmr_ot --save_steps 3330 --init_checkpoint ernie-large/params --ernie_config_path ernie-large/ernie_vil.large.json --learning_rate 2e-5 --warmup_steps 6654 --weight_decay 0.01 --max_seq_len 50
   ```
 
