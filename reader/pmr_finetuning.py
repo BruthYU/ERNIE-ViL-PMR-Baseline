@@ -21,6 +21,9 @@ import paddle.fluid as fluid
 __all__ = {'train':['train-ori.jsonl','train-adv.jsonl'],'train-val':['train-ori.jsonl','train-adv.jsonl','val-ori.jsonl','val-adv.jsonl'],'val':['val-ori.jsonl','val-adv.jsonl']
            ,'val-ori':['val-ori.jsonl'],'val-adv':['val-ori.jsonl'],'test':['test-ori-without-label.jsonl']}
 
+GENDER_NEUTRAL_NAMES = ['Casey', 'Riley', 'Jessie', 'Jackie', 'Avery', 'Jaime', 'Peyton', 'Kerry', 'Jody', 'Kendall',
+                        'Frankie', 'Pat', 'Quinn']
+
 def _converId(img_id):
     """ conversion for image ID """
     img_id = img_id.split('-')
@@ -137,10 +140,13 @@ class PMRDataReader:
         """
             replace "person" with a random name
         """
+        person_name_id = 0
         random_name = []
         for name in det_names:
             if name == 'person':
-                word = random.choice(self._names)
+                #word = random.choice(self._names)
+                word = GENDER_NEUTRAL_NAMES[person_name_id]
+                person_name_id = (person_name_id + 1) % len(GENDER_NEUTRAL_NAMES)
             else:
                 word = name
             random_name.append(word)
